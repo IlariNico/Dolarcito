@@ -10,11 +10,9 @@ export class CotizacionService {
   
 
   async getCotization() {
-    // Rutas para obtener la cotización del dólar
     const rutaDolar = 'https://dolarapi.com/v1/dolares/blue';
     const rutaDolarFecha = 'https://api.argentinadatos.com/v1/cotizaciones/dolares/blue/';
   
-    // Obtener fecha de hoy y de ayer
     const hoy = new Date();
     const ayer = new Date(hoy);
     ayer.setDate(hoy.getDate() - 1);
@@ -25,21 +23,17 @@ export class CotizacionService {
     const dia = String(ayer.getDate()).padStart(2, '0');
   
     try {
-      // Obtener cotización de hoy y de ayer desde las APIs
       const [dolarHoy, dolarAyer] = await Promise.all([
         axios.get(rutaDolar),
         axios.get(`${rutaDolarFecha}${año}/${mes}/${dia}`),
       ]);
   
-      // Obtener valores de compra y venta de ambas cotizaciones
       const { venta: ventaHoy, compra: compraHoy } = dolarHoy.data;
       const { venta: ventaAyer, compra: compraAyer } = dolarAyer.data;
   
-      // Calcular la variación de venta y compra
       const variacionVenta = this.calcularVariacion(ventaHoy, ventaAyer);
       const variacionCompra = this.calcularVariacion(compraHoy, compraAyer);
-  
-      // Crear el objeto de cotización con los resultados
+
       const cotizacionDolar = new CotizacionDto(
         'USD',
         ventaHoy,
@@ -94,6 +88,7 @@ export class CotizacionService {
       💵 Venta: $${formatCurrency(venta)} ${symbolVenta} ${Math.abs(variacionVenta)}%
 
       🕒 Actualizado: ${new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+      
       #Dolar #Economia #Dolarcito`;
   }
 }

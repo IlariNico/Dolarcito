@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CotizacionService } from './cotizacion.service';
 import { TwitterService } from 'src/twitter/twitter.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 
 @Controller('cotizacion')
@@ -15,13 +16,15 @@ export class CotizacionController {
     return this.cotizacionService.getCotization();
   }
 
+
+  @Cron(CronExpression.MONDAY_TO_FRIDAY_AT_5PM)
   @Get('/dolar/tweet')
   async tweetCotizacionDolar() {
     try {
       const cotizacion=await this.cotizacionService.getCotization();
       const tweet=this.cotizacionService.generarTweet(cotizacion);
-      this.twitterService.tweet(tweet)
-      
+      //this.twitterService.tweet(tweet)
+      console.log('tweet send')
       return "tweet send"
     } catch (error) {
       console.log(error)
