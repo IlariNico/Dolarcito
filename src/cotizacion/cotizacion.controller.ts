@@ -23,7 +23,7 @@ export class CotizacionController {
     try {
       const cotizacion=await this.cotizacionService.getCotization();
       const tweet=this.cotizacionService.generarTweet(cotizacion);
-      //this.twitterService.tweet(tweet)
+      this.twitterService.tweet(tweet)
       console.log('tweet send')
       return "tweet send"
     } catch (error) {
